@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>台北市召會82會所</title>
+<meta name="description" content="聚會時間、地點與聯絡資訊，內容即時更新。">
+<meta property="og:title" content="台北市召會82會所">
+<meta property="og:description" content="聚會時間、地點與聯絡資訊">
+<meta property="og:image" content="assets/cover-20260914100733.jpg?v=20260914100733">
+<meta name="theme-color" content="#1f1b16">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#fbf8f3; --card:#ffffff; --ink:#231f1a; --muted:#7d7466;
+    --gold:#b3893f; --gold-soft:#f0e3c8; --line:#eae2d5; --shadow:0 10px 30px rgba(60,45,20,.09);
+  }
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  html,body{margin:0;padding:0}
+  body{
+    background:var(--bg); color:var(--ink);
+    font-family:"Noto Sans TC",-apple-system,BlinkMacSystemFont,"Segoe UI",system-ui,sans-serif;
+    line-height:1.65; -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:560px;margin:0 auto;padding:0 0 48px}
+  /* ── Hero ── */
+  .hero{position:relative;background:#111;overflow:hidden}
+  .hero img{display:block;width:100%;aspect-ratio:16/10;object-fit:cover;opacity:.94}
+  .hero .veil{position:absolute;inset:0;background:linear-gradient(to top,rgba(10,8,5,.88) 8%,rgba(10,8,5,.15) 55%,rgba(10,8,5,.35) 100%)}
+  .hero .txt{position:absolute;left:0;right:0;bottom:0;padding:22px 22px 24px;color:#fff}
+  .hero .eyebrow{font-size:12px;letter-spacing:.22em;color:#f4dfae;font-weight:700;margin-bottom:6px}
+  .hero h1{margin:0;font-size:27px;font-weight:900;letter-spacing:.02em;line-height:1.3;text-shadow:0 2px 14px rgba(0,0,0,.5)}
+  .hero p{margin:6px 0 0;font-size:13.5px;color:#eee3cf;opacity:.95}
+  .stamp{position:absolute;top:14px;right:14px;background:rgba(255,255,255,.14);backdrop-filter:blur(8px);
+    border:1px solid rgba(255,255,255,.28);color:#fff;font-size:11px;font-weight:700;
+    padding:5px 10px;border-radius:999px;letter-spacing:.04em}
+  /* ── Hero: 海報模式（直式圖不裁切，標題移到圖下方） ── */
+  .hero.poster{display:flex;flex-direction:column;background:#efe7d8}
+  .hero.poster img{aspect-ratio:auto;object-fit:contain;opacity:1}
+  .hero.poster .veil{display:none}
+  .hero.poster .stamp{position:static;align-self:flex-end;margin:12px 14px 0;
+    background:#fff;color:#6b5f4a;border-color:#e4d9c4;backdrop-filter:none}
+  .hero.poster .txt{position:static;color:var(--ink);padding:12px 20px 20px}
+  .hero.poster .eyebrow{color:var(--gold)}
+  .hero.poster h1{font-size:24px;text-shadow:none}
+  .hero.poster p{color:var(--muted);opacity:1}
+  /* ── Sections ── */
+  section{padding:0 16px;margin-top:20px}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow);overflow:hidden}
+  h2{font-size:15px;margin:0 0 10px 4px;font-weight:700;letter-spacing:.06em;color:var(--muted);
+     display:flex;align-items:center;gap:8px}
+  h2::after{content:"";flex:1;height:1px;background:var(--line)}
+  /* ── Meetings ── */
+  .meet{display:flex;gap:14px;padding:15px 17px;border-bottom:1px solid var(--line);align-items:flex-start}
+  .meet:last-child{border-bottom:0}
+  .meet .dot{width:9px;height:9px;border-radius:50%;background:var(--gold);flex:0 0 auto;margin-top:9px;
+    box-shadow:0 0 0 4px var(--gold-soft)}
+  .meet .n{font-weight:700;font-size:16px;margin:0}
+  .meet .t{font-size:14.5px;color:#3c352c;margin:2px 0 0}
+  .meet .p{font-size:13px;color:var(--muted);margin:3px 0 0}
+  .meet a.maps{display:inline-block;margin-top:7px;font-size:12.5px;color:var(--gold);font-weight:700;text-decoration:none}
+  .addr{display:flex;gap:10px;padding:15px 17px;align-items:center;font-size:14px}
+  .addr .ico{font-size:17px}
+  /* ── Posters（活動海報／單張） ── */
+  .poster{display:block;text-decoration:none;color:inherit}
+  .poster img{display:block;width:100%;height:auto}
+  .poster .pc{padding:10px 16px 14px;font-size:13.5px;color:var(--muted);text-align:center;font-weight:600}
+  /* ── Announcements ── */
+  .news{padding:8px 17px 14px}
+  .news li{list-style:none;position:relative;padding:8px 0 8px 20px;font-size:14.5px;border-bottom:1px dashed var(--line)}
+  .news li:last-child{border-bottom:0}
+  .news li::before{content:"◆";position:absolute;left:0;top:8px;color:var(--gold);font-size:11px}
+  /* ── Verse ── */
+  .verse{padding:20px 20px 22px;text-align:center}
+  .verse .q{font-size:15.5px;line-height:1.9;color:#2c2620}
+  .verse .r{margin-top:10px;font-size:12.5px;color:var(--gold);font-weight:700;letter-spacing:.08em}
+  /* ── Contacts ── */
+  .contact{display:block;text-decoration:none;color:inherit;display:flex;align-items:center;gap:13px;
+    padding:16px 18px;border-bottom:1px solid var(--line)}
+  .contact:last-child{border-bottom:0}
+  .contact .ci{font-size:19px;width:38px;height:38px;flex:0 0 auto;border-radius:12px;background:var(--gold-soft);
+    display:flex;align-items:center;justify-content:center}
+  .contact .cl{font-size:12.5px;color:var(--muted);margin:0}
+  .contact .cv{font-size:15.5px;font-weight:700;margin:0}
+  .contact .arrow{margin-left:auto;color:#c9bda6;font-size:18px}
+  .contact:active{background:#faf7f1}
+  /* ── Footer ── */
+  footer{text-align:center;padding:26px 20px 0;color:#a2988a;font-size:12px}
+  footer .up{display:inline-block;margin-top:8px;padding:4px 11px;border:1px solid var(--line);
+    border-radius:999px;background:#fff;color:#8b8271;font-weight:600}
+  .fade{animation:fade .5s ease both}
+  @keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="hero">
+    <img id="cover" src="assets/cover-20260914100733.jpg?v=20260914100733" alt="聚會照片">
+    <div class="veil"></div>
+    <div class="stamp">每週更新</div>
+    <div class="txt">
+      <div class="eyebrow" id="eyebrow">WELCOME</div>
+      <h1 id="title">—</h1>
+      <p id="subtitle">—</p>
+    </div>
+  </header>
+
+  <section id="postersSec" style="display:none">
+    <div class="card" id="posters"></div>
+  </section>
+
+  <section>
+    <h2>聚會時間與地點</h2>
+    <div class="card" id="meetings"></div>
+    <div class="card" style="margin-top:12px">
+      <div class="addr"><span class="ico">📍</span><span id="addr">—</span></div>
+      <a class="contact" id="mapBtn" href="#" target="_blank" rel="noopener">
+        <span class="ci">🗺️</span>
+        <span><span class="cl">交通指引</span><span class="cv">用 Google Maps 導航</span></span>
+        <span class="arrow">›</span>
+      </a>
+    </div>
+    <div class="card" id="halls" style="margin-top:12px"></div>
+  </section>
+
+  <section>
+    <h2 id="newsH2">本週消息</h2>
+    <div class="card"><ul class="news" id="news"></ul></div>
+  </section>
+
+  <section>
+    <h2>與我們聯絡</h2>
+    <div class="card" id="contacts"></div>
+  </section>
+
+  <section>
+    <div class="card verse">
+      <div class="q" id="verseText">—</div>
+      <div class="r" id="verseRef">—</div>
+    </div>
+  </section>
+
+  <footer>
+    <div id="footerNote">—</div>
+    <div class="up" id="updated">—</div>
+  </footer>
+</div>
+
+<script id="content-data" type="application/json">{"site_title": "台北市召會82會所", "tagline": "來認識耶穌，認識永恆的盼望", "sub_tagline": "歡迎每一位來到這裡的朋友", "cover_image": "assets/cover-20260914100733.jpg", "cover_version": "20260914100733", "cover_mode": "poster", "cover_caption": "近期活動", "news_title": "近期消息", "announcements": ["9/19（六）桃園野趣森林", "9/20（日）13:00 桌遊時光", "9/23（三）烤肉賞月", "10/4（日）一起打羽球", "10/9（五）金山地瓜園烤肉"], "meetings": [{"name": "主日聚會（同時有兒童聚集）", "time": "每週日 10:00 – 11:30", "place": "台北市大安區和平東路一段141巷1號3樓（派出所旁）", "maps": "https://www.google.com/maps/search/?api=1&query=%E5%8F%B0%E5%8C%97%E5%B8%82%E5%A4%A7%E5%AE%89%E5%8D%80%E5%92%8C%E5%B9%B3%E6%9D%B1%E8%B7%AF%E4%B8%80%E6%AE%B5141%E5%B7%B71%E8%99%9F3%E6%A8%93"}, {"name": "兒童共學時間", "time": "每週五 18:45 – 20:45", "place": "100臺北市中正區板溪里和平西路一段56號2樓 · 歡迎一起帶小孩來吃晚餐（年齡層 2.5Y–8Y）", "maps": "https://share.google/ql4QYTFnkKjJPTWPV"}], "verse": {"text": "神愛世人，甚至將祂的獨生子賜給他們，叫一切信祂的，不至滅亡，反得永生。", "ref": "約翰福音 3:16"}, "address": "台北市大安區和平東路一段141巷1號3樓（派出所旁）", "map_url": "https://www.google.com/maps/search/?api=1&query=%E5%8F%B0%E5%8C%97%E5%B8%82%E5%A4%A7%E5%AE%89%E5%8D%80%E5%92%8C%E5%B9%B3%E6%9D%B1%E8%B7%AF%E4%B8%80%E6%AE%B5141%E5%B7%B71%E8%99%9F3%E6%A8%93", "halls": [{"name": "台北市召會82會所", "address": "台北市中正區和平西路一段56號2樓", "maps": "https://maps.app.goo.gl/7GmfMdh87rVjUFPs7"}], "contacts": [{"label": "LINE 官方帳號", "value": "點我加入好友", "url": "https://line.me/R/ti/p/@038lqqes", "icon": "💬"}], "footer_note": "福音單張 QR Code 專用頁面・內容每週即時更新", "updated_at": "2026-09-17 20:34", "posters": [{"image": "assets/poster-20260917203453.jpg", "version": "20260917203453", "caption": "9/20（日）出遊去！野趣森林", "alt": "9/20（日）出遊去！野趣森林"}]}</script>
+<script>
+(function(){
+  var C = JSON.parse(document.getElementById('content-data').textContent);
+  var $ = function(id){ return document.getElementById(id); };
+  var esc = function(s){ return String(s==null?'':s).replace(/[&<>"]/g, function(c){
+      return ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'})[c]; }); };
+
+  document.title = C.site_title || '聚會資訊';
+  $('title').textContent = C.site_title || '';
+  $('subtitle').textContent = [C.tagline, C.sub_tagline].filter(Boolean).join(' · ');
+  $('eyebrow').textContent = (C.cover_caption || 'WELCOME').toUpperCase();
+  var cover = $('cover');
+  cover.src = (C.cover_image || '') + (C.cover_version ? ('?v=' + encodeURIComponent(C.cover_version)) : '');
+  cover.alt = C.cover_caption || '聚會照片';
+  if (C.cover_mode === 'poster') document.querySelector('.hero').classList.add('poster');
+
+  $('meetings').innerHTML = (C.meetings || []).map(function(m){
+    return '<div class="meet"><span class="dot"></span><div>'
+      + '<p class="n">' + esc(m.name) + '</p>'
+      + '<p class="t">' + esc(m.time) + '</p>'
+      + (m.place ? '<p class="p">' + esc(m.place) + '</p>' : '')
+      + (m.maps ? '<a class="maps" target="_blank" rel="noopener" href="' + esc(m.maps) + '">開啟地圖 ›</a>' : '')
+      + '</div></div>';
+  }).join('');
+
+  $('addr').textContent = C.address || '';
+  $('mapBtn').href = C.map_url || '#';
+
+  var halls = (C.halls || []);
+  if (halls.length) {
+    $('halls').innerHTML = halls.map(function(h){
+      return '<div class="addr"><span class="ico">📍</span><span>'
+        + (h.name ? '<b>' + esc(h.name) + '</b><br>' : '') + esc(h.address) + '</span></div>'
+        + (h.maps ? '<a class="contact" href="' + esc(h.maps) + '" target="_blank" rel="noopener">'
+            + '<span class="ci">🗺️</span><span><span class="cl">交通指引</span>'
+            + '<span class="cv">用 Google Maps 導航</span></span><span class="arrow">›</span></a>' : '');
+    }).join('');
+  } else {
+    $('halls').style.display = 'none';
+  }
+
+  var posters = (C.posters || []);
+  if (posters.length) {
+    $('posters').innerHTML = posters.map(function(p){
+      var src = esc(p.image) + (p.version ? ('?v=' + encodeURIComponent(p.version)) : '');
+      return '<a class="poster" href="' + src + '" target="_blank" rel="noopener">'
+        + '<img src="' + src + '" alt="' + esc(p.alt || p.caption || '活動海報') + '" loading="lazy">'
+        + (p.caption ? '<div class="pc">' + esc(p.caption) + '</div>' : '')
+        + '</a>';
+    }).join('');
+    $('postersSec').style.display = '';
+  }
+
+  $('newsH2').textContent = C.news_title || '本週消息';
+  $('news').innerHTML = (C.announcements || []).map(function(a){ return '<li>' + esc(a) + '</li>'; }).join('');
+
+  $('contacts').innerHTML = (C.contacts || []).map(function(k){
+    return '<a class="contact" href="' + esc(k.url) + '" target="_blank" rel="noopener">'
+      + '<span class="ci">' + esc(k.icon || '•') + '</span>'
+      + '<span><span class="cl">' + esc(k.label) + '</span><span class="cv">' + esc(k.value) + '</span></span>'
+      + '<span class="arrow">›</span></a>';
+  }).join('');
+
+  $('verseText').textContent = '「' + (C.verse && C.verse.text || '') + '」';
+  $('verseRef').textContent = '— ' + ((C.verse && C.verse.ref) || '') + ' —';
+  $('footerNote').textContent = C.footer_note || '';
+  $('updated').textContent = '最後更新：' + (C.updated_at || '');
+  document.querySelector('.wrap').classList.add('fade');
+})();
+</script>
+</body>
+</html>
