@@ -1,0 +1,1008 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>ProjectionLab Pro - 人生財務與月光族警世模擬器</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-color: #080c14;
+      --card-bg: rgba(21, 28, 44, 0.75);
+      --card-border: rgba(255, 255, 255, 0.08);
+      --text-main: #f8fafc;
+      --text-sub: #94a3b8;
+      --primary: #6366f1;
+      --primary-glow: rgba(99, 102, 241, 0.4);
+      --accent-green: #10b981;
+      --accent-blue: #38bdf8;
+      --accent-amber: #f59e0b;
+      --accent-rose: #f43f5e;
+      --accent-purple: #a855f7;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0; padding: 0;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      background-color: var(--bg-color);
+      background-image: radial-gradient(circle at 50% 0%, rgba(99, 102, 241, 0.12), transparent 50%);
+      color: var(--text-main);
+      padding: 16px;
+      padding-bottom: 60px;
+    }
+
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .logo {
+      font-size: 1.35rem;
+      font-weight: 800;
+      background: linear-gradient(135deg, #c7d2fe, #6366f1, #38bdf8);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .badge {
+      background: rgba(99, 102, 241, 0.15);
+      color: #a5b4fc;
+      font-size: 0.75rem;
+      padding: 5px 12px;
+      border-radius: 20px;
+      border: 1px solid rgba(99, 102, 241, 0.3);
+      backdrop-filter: blur(8px);
+    }
+
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 20px;
+      padding: 20px;
+      margin-bottom: 16px;
+      backdrop-filter: blur(12px);
+      box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+    }
+
+    .card-title {
+      font-size: 0.98rem;
+      font-weight: 600;
+      color: var(--text-main);
+      margin-bottom: 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .kpi-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      padding: 16px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .kpi-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; width: 100%; height: 3px;
+      background: linear-gradient(90deg, var(--primary), var(--accent-blue));
+    }
+
+    .kpi-label { font-size: 0.75rem; color: var(--text-sub); margin-bottom: 4px; }
+    .kpi-subnote { font-size: 0.68rem; color: #64748b; margin-bottom: 6px; }
+    .kpi-value { font-size: 1.2rem; font-weight: 700; color: var(--text-main); }
+    .kpi-value.green { color: var(--accent-green); text-shadow: 0 0 12px rgba(16, 185, 129, 0.3); }
+    .kpi-value.blue { color: var(--accent-blue); text-shadow: 0 0 12px rgba(56, 189, 248, 0.3); }
+
+    .alert-banner {
+      background: rgba(244, 63, 94, 0.12);
+      border: 1px solid rgba(244, 63, 94, 0.3);
+      border-radius: 12px;
+      padding: 12px 16px;
+      margin-bottom: 16px;
+      display: none;
+      align-items: center;
+      gap: 10px;
+      color: #fda4af;
+      font-size: 0.85rem;
+      line-height: 1.4;
+    }
+
+    .story-card {
+      background: linear-gradient(135deg, rgba(30, 41, 59, 0.85), rgba(15, 23, 42, 0.95));
+      border: 1px solid var(--card-border);
+      border-radius: 20px;
+      padding: 20px;
+      margin-bottom: 16px;
+    }
+
+    .story-title {
+      font-size: 1.05rem;
+      font-weight: 700;
+      margin-bottom: 14px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .story-section {
+      background: rgba(15, 23, 42, 0.6);
+      border-left: 3px solid var(--primary);
+      border-radius: 8px;
+      padding: 12px;
+      margin-bottom: 12px;
+    }
+
+    .story-section.danger { border-left-color: var(--accent-rose); }
+    .story-section.warning { border-left-color: var(--accent-amber); }
+    .story-section.success { border-left-color: var(--accent-green); }
+
+    .story-sec-title {
+      font-size: 0.88rem;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+
+    .story-sec-title.danger { color: #fca5a5; }
+    .story-sec-title.warning { color: #fde68a; }
+    .story-sec-title.success { color: #a7f3d0; }
+
+    .story-sec-body {
+      font-size: 0.85rem;
+      line-height: 1.55;
+      color: #cbd5e1;
+    }
+
+    .waste-card {
+      background: rgba(244, 63, 94, 0.08);
+      border: 1px solid rgba(244, 63, 94, 0.25);
+      border-radius: 20px;
+      padding: 20px;
+      margin-bottom: 16px;
+    }
+
+    .waste-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+
+    .waste-result-box {
+      background: #0f172a;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 12px;
+      padding: 12px;
+      text-align: center;
+    }
+
+    .waste-result-title { font-size: 0.72rem; color: var(--text-sub); margin-bottom: 4px; }
+    .waste-result-val { font-size: 1.05rem; font-weight: 700; color: #fca5a5; }
+
+    .waste-presets {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-bottom: 12px;
+    }
+
+    .preset-btn {
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      color: var(--text-sub);
+      font-size: 0.75rem;
+      padding: 6px 10px;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .preset-btn:hover, .preset-btn.active {
+      background: rgba(244, 63, 94, 0.2);
+      border-color: rgba(244, 63, 94, 0.5);
+      color: #fda4af;
+    }
+
+    .form-group { margin-bottom: 16px; }
+    label { display: block; font-size: 0.85rem; color: var(--text-sub); margin-bottom: 6px; }
+
+    .input-wrapper { position: relative; }
+    .input-prefix { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: var(--text-sub); font-size: 0.9rem; }
+    .input-suffix { position: absolute; right: 12px; top: 50%; transform: translateY(-50%); color: var(--text-sub); font-size: 0.85rem; }
+
+    .formatted-hint {
+      font-size: 0.75rem;
+      color: #38bdf8;
+      margin-top: 4px;
+      font-weight: 500;
+    }
+
+    input[type="number"], input[type="text"].formatted-num {
+      width: 100%;
+      background: #0f172a;
+      border: 1px solid var(--card-border);
+      border-radius: 10px;
+      padding: 12px 12px 12px 32px;
+      color: var(--text-main);
+      font-size: 1rem;
+      font-weight: 600;
+      outline: none;
+      transition: all 0.2s;
+    }
+
+    input[type="number"].suffix-padding, input[type="text"].suffix-padding { padding-right: 36px; }
+    input:focus { border-color: var(--primary); box-shadow: 0 0 12px var(--primary-glow); }
+
+    .allocation-box {
+      background: #0f172a;
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 14px;
+      margin-bottom: 12px;
+    }
+
+    .alloc-row { display: flex; justify-content: space-between; align-items: center; gap: 8px; margin-bottom: 10px; }
+    .alloc-title { font-size: 0.88rem; font-weight: 600; flex: 1; }
+
+    .compact-input-group {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      background: #1e293b;
+      border: 1px solid var(--card-border);
+      border-radius: 8px;
+      padding: 4px 8px;
+    }
+
+    .compact-input-group span { font-size: 0.75rem; color: var(--text-sub); }
+    .compact-input-group input {
+      width: 44px; background: transparent; border: none;
+      color: var(--text-main); font-size: 0.85rem; font-weight: 600;
+      text-align: right; outline: none; padding: 0;
+    }
+
+    .alloc-footer { font-size: 0.75rem; color: var(--text-sub); margin-top: 6px; }
+    .alloc-amount { color: #38bdf8; font-weight: 600; }
+
+    input[type="range"] {
+      width: 100%; height: 6px; background: #1e293b; border-radius: 5px; outline: none; -webkit-appearance: none;
+    }
+
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none; width: 18px; height: 18px; border-radius: 50%;
+      background: var(--primary); cursor: pointer; box-shadow: 0 0 10px var(--primary-glow);
+    }
+
+    .slider-stock::-webkit-slider-thumb { background: #818cf8; }
+    .slider-bond::-webkit-slider-thumb { background: #34d399; }
+    .slider-cash::-webkit-slider-thumb { background: #fbbf24; }
+
+    .btn-toggle-advanced {
+      width: 100%;
+      background: linear-gradient(135deg, #4f46e5, #6366f1);
+      color: white;
+      border: none;
+      border-radius: 14px;
+      padding: 14px;
+      font-size: 0.95rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 16px;
+      box-shadow: 0 4px 15px rgba(99, 102, 241, 0.3);
+      transition: all 0.2s;
+    }
+
+    .btn-toggle-advanced:active { transform: scale(0.98); }
+
+    .advanced-section { display: none; }
+
+    .event-card {
+      background: rgba(15, 23, 42, 0.6);
+      border: 1px solid var(--card-border);
+      border-radius: 14px;
+      padding: 14px;
+      margin-bottom: 12px;
+    }
+
+    .toggle-row { display: flex; justify-content: space-between; align-items: center; }
+
+    .switch { position: relative; display: inline-block; width: 44px; height: 24px; }
+    .switch input { opacity: 0; width: 0; height: 0; }
+
+    .slider-toggle {
+      position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0;
+      background-color: #334155; transition: .3s; border-radius: 24px;
+    }
+
+    .slider-toggle:before {
+      position: absolute; content: ""; height: 18px; width: 18px; left: 3px; bottom: 3px;
+      background-color: white; transition: .3s; border-radius: 50%;
+    }
+
+    input:checked + .slider-toggle { background-color: var(--primary); }
+    input:checked + .slider-toggle:before { transform: translateX(20px); }
+
+    .event-details {
+      margin-top: 12px; padding-top: 12px;
+      border-top: 1px solid rgba(255, 255, 255, 0.05);
+      display: none; grid-template-columns: 1fr 1fr; gap: 10px;
+    }
+
+    .chart-container { position: relative; height: 290px; width: 100%; }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="logo">ProjectionLab <span style="font-size: 0.8rem; font-weight: normal;">Pro</span></div>
+    <div class="badge">月光警世旗艦版</div>
+  </header>
+
+  <a href="life/" style="display:block;text-decoration:none;background:linear-gradient(135deg,#4f46e5,#7c3aed);border-radius:18px;padding:16px 18px;margin-bottom:16px;box-shadow:0 10px 30px rgba(99,102,241,.35)">
+    <div style="display:flex;align-items:center;gap:12px">
+      <div style="font-size:1.6rem">🎮</div>
+      <div style="flex:1">
+        <div style="color:#fff;font-weight:800;font-size:.98rem">進入沉浸式人生遊戲</div>
+        <div style="color:#c7d2fe;font-size:.75rem;margin-top:2px">18 → 85 歲，一年一回合，隨機事件，走到你的結局</div>
+      </div>
+      <div style="color:#fff;font-size:1.2rem">→</div>
+    </div>
+  </a>
+
+  <!-- 警示橫幅 -->
+  <div class="alert-banner" id="alertBanner">
+    <span style="font-size: 1.2rem;">⚠️</span>
+    <span id="alertText">警告：資產無法支撐退休，預估將在某年歸零！</span>
+  </div>
+
+  <!-- KPI 摘要 -->
+  <div class="kpi-grid">
+    <div class="kpi-card">
+      <div class="kpi-label">即時動態 FIRE 門檻</div>
+      <div class="kpi-subnote">📌 包含照護/通膨與風險費用</div>
+      <div class="kpi-value green" id="kpi-fire-num">$0</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">抗通膨 FIRE 達成年齡</div>
+      <div class="kpi-subnote">💡 考量退休停止薪資與年金</div>
+      <div class="kpi-value blue" id="kpi-fire-age">0 歲</div>
+    </div>
+  </div>
+
+  <!-- 主資產圖表 (推演至 100 歲) -->
+  <div class="card">
+    <div class="card-title">
+      <span>📈 未來資產推演 (至 100 歲)</span>
+      <span style="font-size: 0.78rem; color: #818cf8;" id="portfolioRoiTag">名目: 5.6% | 實質: 3.1%</span>
+    </div>
+    <div class="chart-container">
+      <canvas id="wealthChart"></canvas>
+    </div>
+  </div>
+
+  <!-- 基本參數卡片 -->
+  <div class="card">
+    <div class="card-title">⚙️ 基本收支、退休與通膨設定</div>
+
+    <div class="form-group">
+      <label>目前的年齡</label>
+      <div class="input-wrapper">
+        <span class="input-prefix">🎂</span>
+        <input type="number" id="currentAge" value="35" min="18" max="90" oninput="calculate()">
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label>預計退休年齡 <span style="color: #f43f5e; font-size: 0.78rem;">(⚠️ 達此年齡後停止薪資收入)</span></label>
+      <div class="input-wrapper">
+        <span class="input-prefix">🏖️</span>
+        <input type="number" id="retireAge" value="65" min="30" max="85" oninput="calculate()">
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label>現有總資產 (NTD)</label>
+      <div class="input-wrapper">
+        <span class="input-prefix">$</span>
+        <input type="text" class="formatted-num" id="currentAssetsText" value="100,000" oninput="formatAndCalc('currentAssetsText', 'currentAssets')">
+        <input type="hidden" id="currentAssets" value="100000">
+      </div>
+      <div class="formatted-hint" id="currentAssetsHint">即時顯示：NT$ 100,000</div>
+    </div>
+
+    <div class="form-group">
+      <label>每月工作實領薪資 (退休後歸零)</label>
+      <div class="input-wrapper">
+        <span class="input-prefix">$</span>
+        <input type="text" class="formatted-num" id="monthlyIncomeText" value="90,000" oninput="formatAndCalc('monthlyIncomeText', 'monthlyIncome')">
+        <input type="hidden" id="monthlyIncome" value="90000">
+      </div>
+      <div class="formatted-hint" id="monthlyIncomeHint">即時顯示：NT$ 90,000</div>
+    </div>
+
+    <div class="form-group">
+      <label>每月固定總支出 (生活費/房租/娛樂)</label>
+      <div class="input-wrapper">
+        <span class="input-prefix">$</span>
+        <input type="text" class="formatted-num" id="monthlyExpensesText" value="50,000" oninput="formatAndCalc('monthlyExpensesText', 'monthlyExpenses')">
+        <input type="hidden" id="monthlyExpenses" value="50000">
+      </div>
+      <div class="formatted-hint" id="monthlyExpensesHint">即時顯示：NT$ 50,000</div>
+    </div>
+
+    <div class="form-group">
+      <label>預期年通膨率 (%)</label>
+      <div class="input-wrapper">
+        <span class="input-prefix">🔥</span>
+        <input type="number" id="inflationRate" value="2.5" step="0.1" class="suffix-padding" oninput="calculate()">
+        <span class="input-suffix">%</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- 投資配置與殖利率卡片 -->
+  <div class="card">
+    <div class="card-title">📊 投資配置與殖利率設定</div>
+    
+    <div class="allocation-box">
+      <div class="alloc-row">
+        <div class="alloc-title" style="color: #818cf8;">📈 股票 / ETF</div>
+        <div style="display: flex; gap: 6px;">
+          <div class="compact-input-group"><span>比例</span><input type="number" id="numPctStock" value="60" oninput="syncAllocFromInput('stock')"><span>%</span></div>
+          <div class="compact-input-group"><span>報酬</span><input type="number" id="yieldStock" value="7.0" step="0.5" oninput="calculate()"><span>%</span></div>
+        </div>
+      </div>
+      <input type="range" class="slider-stock" id="sliderStock" min="0" max="100" value="60" oninput="syncAllocFromSlider('stock')">
+      <div class="alloc-footer">對應金額: <span class="alloc-amount" id="amtStock">$0 萬</span></div>
+    </div>
+
+    <div class="allocation-box">
+      <div class="alloc-row">
+        <div class="alloc-title" style="color: #34d399;">🛡️ 債券 / 美債</div>
+        <div style="display: flex; gap: 6px;">
+          <div class="compact-input-group"><span>比例</span><input type="number" id="numPctBond" value="30" oninput="syncAllocFromInput('bond')"><span>%</span></div>
+          <div class="compact-input-group"><span>殖利率</span><input type="number" id="yieldBond" value="4.0" step="0.5" oninput="calculate()"><span>%</span></div>
+        </div>
+      </div>
+      <input type="range" class="slider-bond" id="sliderBond" min="0" max="100" value="30" oninput="syncAllocFromSlider('bond')">
+      <div class="alloc-footer">對應金額: <span class="alloc-amount" id="amtBond">$0 萬</span></div>
+    </div>
+
+    <div class="allocation-box">
+      <div class="alloc-row">
+        <div class="alloc-title" style="color: #fbbf24;">💵 現金 / 活存</div>
+        <div style="display: flex; gap: 6px;">
+          <div class="compact-input-group"><span>比例</span><input type="number" id="numPctCash" value="10" oninput="syncAllocFromInput('cash')"><span>%</span></div>
+          <div class="compact-input-group"><span>利率</span><input type="number" id="yieldCash" value="1.5" step="0.1" oninput="calculate()"><span>%</span></div>
+        </div>
+      </div>
+      <input type="range" class="slider-cash" id="sliderCash" min="0" max="100" value="10" oninput="syncAllocFromSlider('cash')">
+      <div class="alloc-footer">對應金額: <span class="alloc-amount" id="amtCash">$0 萬</span></div>
+    </div>
+  </div>
+
+  <!-- 💸 月光代價試算器 -->
+  <div class="waste-card">
+    <div class="card-title" style="color: #f43f5e; margin-bottom: 12px;">
+      <span>💸 月光代價試算器 (The Cost of Being Broke)</span>
+    </div>
+    <div style="font-size: 0.8rem; color: var(--text-sub); margin-bottom: 12px;">
+      算算看每天隨手花掉的精緻小確幸，轉為投資 7% 報酬 ETF 會產生多可怕的代價：
+    </div>
+
+    <!-- 快速快捷按鈕：星巴克 -> 手搖飲 -> 計程車 -> 一包菸 -->
+    <div class="waste-presets">
+      <button class="preset-btn" onclick="addWastePreset(165)">+ ☕ 星巴克大杯 ($165)</button>
+      <button class="preset-btn" onclick="addWastePreset(60)">+ 🥤 手搖飲 ($60)</button>
+      <button class="preset-btn" onclick="addWastePreset(200)">+ 🚗 叫計程車 ($200)</button>
+      <button class="preset-btn" onclick="addWastePreset(125)">+ 🚬 一包菸 ($125)</button>
+      <button class="preset-btn" style="background: rgba(244,63,94,0.15);" onclick="resetWastePreset()">🔄 清空重算</button>
+    </div>
+
+    <div class="form-group">
+      <label>每日非必要隨手小浪費總額 (NTD)</label>
+      <div class="input-wrapper">
+        <span class="input-prefix">☕</span>
+        <input type="number" id="dailyWaste" value="385" step="10" oninput="calcWaste()">
+      </div>
+      <div style="font-size: 0.75rem; color: #94a3b8; margin-top: 4px;">
+        相當於每月浪費: <strong id="monthlyWasteVal" style="color: #fca5a5;">$11,550</strong>
+      </div>
+    </div>
+
+    <div class="waste-grid">
+      <div class="waste-result-box">
+        <div class="waste-result-title">10 年後錯失資產</div>
+        <div class="waste-result-val" id="waste10y">$0 萬</div>
+      </div>
+      <div class="waste-result-box">
+        <div class="waste-result-title">20 年後錯失資產</div>
+        <div class="waste-result-val" id="waste20y">$0 萬</div>
+      </div>
+    </div>
+    <div class="waste-result-box" style="border-color: rgba(244, 63, 94, 0.4);">
+      <div class="waste-result-title">30 年後累積錯失（一套房頭期款）</div>
+      <div class="waste-result-val" style="font-size: 1.3rem; color: #f43f5e;" id="waste30y">$0 萬</div>
+    </div>
+  </div>
+
+  <!-- 🚀 啟動進階風險與退休年金計算按鈕 -->
+  <button class="btn-toggle-advanced" onclick="toggleAdvancedSection()">
+    <span id="advBtnIcon">⚡</span> <span id="advBtnText">開啟進階模擬（勞退年金 / 蒙地卡羅 / 人生風險）</span>
+  </button>
+
+  <!-- 🔒 進階隱藏區塊 -->
+  <div class="advanced-section" id="advancedSection">
+    
+    <!-- 🏛️ 勞保與勞退年金 -->
+    <div class="card">
+      <div class="card-title">🏛️ 社會保險與勞退/勞保年金</div>
+      <div class="event-card">
+        <div class="toggle-row">
+          <div>
+            <div style="font-size: 0.88rem; font-weight: 600; color: #38bdf8;">📜 退休年金給付 (勞保/勞退/退撫)</div>
+            <div style="font-size: 0.72rem; color: var(--text-sub);">模擬退休後每月領取的政府年金注入現金流</div>
+          </div>
+          <label class="switch">
+            <input type="checkbox" id="togglePension" onchange="toggleEventDetails('pension')">
+            <span class="slider-toggle"></span>
+          </label>
+        </div>
+        <div class="event-details" id="detailsPension">
+          <div>
+            <label>領取起始年齡</label>
+            <input type="number" id="pensionAge" value="65" oninput="calculate()">
+          </div>
+          <div>
+            <label>預估每月年金 (NTD)</label>
+            <input type="number" id="pensionMonthly" value="25000" step="1000" oninput="calculate()">
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 🚨 重大疾病與照護風險 -->
+    <div class="card">
+      <div class="card-title">🚨 重大疾病與晚年長照風險</div>
+
+      <div class="event-card">
+        <div class="toggle-row">
+          <div>
+            <div style="font-size: 0.88rem; font-weight: 600; color: #f43f5e;">🏥 重大疾病 / 突發醫療支出</div>
+            <div style="font-size: 0.72rem; color: var(--text-sub);">模擬特定年齡需一次性掏出大額醫療費</div>
+          </div>
+          <label class="switch">
+            <input type="checkbox" id="toggleMedical" onchange="toggleEventDetails('medical')">
+            <span class="slider-toggle"></span>
+          </label>
+        </div>
+        <div class="event-details" id="detailsMedical">
+          <div>
+            <label>發生年齡</label>
+            <input type="number" id="medAge" value="55" oninput="calculate()">
+          </div>
+          <div>
+            <label>醫療總支出 (NTD)</label>
+            <input type="number" id="medCost" value="2000000" step="100000" oninput="calculate()">
+          </div>
+        </div>
+      </div>
+
+      <div class="event-card">
+        <div class="toggle-row">
+          <div>
+            <div style="font-size: 0.88rem; font-weight: 600; color: #f59e0b;">👵 晚年長期照護開銷</div>
+            <div style="font-size: 0.72rem; color: var(--text-sub);">模擬高齡後每月新增護理/看護費用</div>
+          </div>
+          <label class="switch">
+            <input type="checkbox" id="toggleCare" onchange="toggleEventDetails('care')">
+            <span class="slider-toggle"></span>
+          </label>
+        </div>
+        <div class="event-details" id="detailsCare">
+          <div>
+            <label>開始年齡</label>
+            <input type="number" id="careAge" value="75" oninput="calculate()">
+          </div>
+          <div>
+            <label>每月新增開銷 (NTD)</label>
+            <input type="number" id="careCost" value="30000" step="5000" oninput="calculate()">
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 🎲 蒙地卡羅壓力測試 -->
+    <div class="card">
+      <div class="card-title">🎲 蒙地卡羅股災崩盤壓力測試</div>
+      <div class="event-card">
+        <div class="toggle-row">
+          <div>
+            <div style="font-size: 0.88rem; font-weight: 600; color: #a855f7;">📉 熊市股災衝擊 (Bear Market Shock)</div>
+            <div style="font-size: 0.72rem; color: var(--text-sub);">模擬退休前後特定年份股票資產直接暴跌</div>
+          </div>
+          <label class="switch">
+            <input type="checkbox" id="toggleMonteCarlo" onchange="toggleEventDetails('monteCarlo')">
+            <span class="slider-toggle"></span>
+          </label>
+        </div>
+        <div class="event-details" id="detailsMonteCarlo">
+          <div>
+            <label>股災發生年齡</label>
+            <input type="number" id="mcAge" value="50" oninput="calculate()">
+          </div>
+          <div>
+            <label>股票資產直接暴跌 (%)</label>
+            <input type="number" id="mcDrop" value="35" min="10" max="70" oninput="calculate()">
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- 📖 三段式寫實人生警世劇本 -->
+  <div class="story-card" id="storyCard">
+    <div class="story-title" id="storyTitle">📖 人生描述：寫實終身財務展望</div>
+    <div id="storyBody">
+      <!-- 動態載入故事 -->
+    </div>
+  </div>
+
+  <script>
+    let chart;
+    let isAdvancedActive = false;
+
+    function formatAndCalc(textId, hiddenId) {
+      const inputElem = document.getElementById(textId);
+      const hiddenElem = document.getElementById(hiddenId);
+      const hintElem = document.getElementById(textId.replace('Text', 'Hint'));
+
+      let rawVal = inputElem.value.replace(/[^0-9]/g, '');
+      if (rawVal === '') rawVal = '0';
+      const numVal = parseInt(rawVal, 10);
+
+      hiddenElem.value = numVal;
+      inputElem.value = numVal.toLocaleString('en-US');
+      if (hintElem) {
+        hintElem.innerText = '即時顯示：NT$ ' + numVal.toLocaleString('en-US');
+      }
+
+      calculate();
+    }
+
+    function initChart() {
+      const ctx = document.getElementById('wealthChart').getContext('2d');
+      chart = new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: [],
+          datasets: [
+            {
+              label: '股票資產',
+              data: [],
+              borderColor: '#818cf8',
+              backgroundColor: 'rgba(129, 140, 248, 0.25)',
+              fill: true,
+              tension: 0.2,
+              pointRadius: 0
+            },
+            {
+              label: '債券資產',
+              data: [],
+              borderColor: '#34d399',
+              backgroundColor: 'rgba(52, 211, 153, 0.25)',
+              fill: true,
+              tension: 0.2,
+              pointRadius: 0
+            },
+            {
+              label: '現金資產',
+              data: [],
+              borderColor: '#fbbf24',
+              backgroundColor: 'rgba(251, 191, 36, 0.25)',
+              fill: true,
+              tension: 0.2,
+              pointRadius: 0
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { display: true, labels: { color: '#94a3b8', font: { size: 10 } } },
+            tooltip: {
+              callbacks: {
+                label: (context) => ` ${context.dataset.label}: NT$ ${Math.round(context.raw).toLocaleString()}`
+              }
+            }
+          },
+          scales: {
+            x: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#94a3b8' } },
+            y: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#94a3b8', callback: (val) => '$' + (val / 10000).toLocaleString() + '萬' } }
+          }
+        }
+      });
+    }
+
+    function toggleAdvancedSection() {
+      isAdvancedActive = !isAdvancedActive;
+      const sec = document.getElementById('advancedSection');
+      const icon = document.getElementById('advBtnIcon');
+      const text = document.getElementById('advBtnText');
+
+      if (isAdvancedActive) {
+        sec.style.display = 'block';
+        icon.innerText = '⚡';
+        text.innerText = '關閉進階功能計算';
+      } else {
+        sec.style.display = 'none';
+        icon.innerText = '⚡';
+        text.innerText = '開啟進階模擬（勞退年金 / 蒙地卡羅 / 人生風險）';
+      }
+      calculate();
+    }
+
+    function toggleEventDetails(type) {
+      if (type === 'medical') {
+        document.getElementById('detailsMedical').style.display = document.getElementById('toggleMedical').checked ? 'grid' : 'none';
+      } else if (type === 'care') {
+        document.getElementById('detailsCare').style.display = document.getElementById('toggleCare').checked ? 'grid' : 'none';
+      } else if (type === 'pension') {
+        document.getElementById('detailsPension').style.display = document.getElementById('togglePension').checked ? 'grid' : 'none';
+      } else if (type === 'monteCarlo') {
+        document.getElementById('detailsMonteCarlo').style.display = document.getElementById('toggleMonteCarlo').checked ? 'grid' : 'none';
+      }
+      calculate();
+    }
+
+    function addWastePreset(amt) {
+      const input = document.getElementById('dailyWaste');
+      input.value = (parseFloat(input.value) || 0) + amt;
+      calcWaste();
+    }
+
+    function resetWastePreset() {
+      document.getElementById('dailyWaste').value = 0;
+      calcWaste();
+    }
+
+    function calcWaste() {
+      const dailyWaste = parseFloat(document.getElementById('dailyWaste').value) || 0;
+      const monthlyWaste = dailyWaste * 30;
+      document.getElementById('monthlyWasteVal').innerText = '$' + monthlyWaste.toLocaleString();
+
+      const r = 0.07 / 12;
+
+      const waste10 = monthlyWaste * ((Math.pow(1 + r, 120) - 1) / r);
+      const waste20 = monthlyWaste * ((Math.pow(1 + r, 240) - 1) / r);
+      const waste30 = monthlyWaste * ((Math.pow(1 + r, 360) - 1) / r);
+
+      document.getElementById('waste10y').innerText = '$' + Math.round(waste10 / 10000).toLocaleString() + ' 萬';
+      document.getElementById('waste20y').innerText = '$' + Math.round(waste20 / 10000).toLocaleString() + ' 萬';
+      document.getElementById('waste30y').innerText = '$' + Math.round(waste30 / 10000).toLocaleString() + ' 萬';
+    }
+
+    function syncAllocFromSlider(type) {
+      if (type === 'stock') document.getElementById('numPctStock').value = document.getElementById('sliderStock').value;
+      if (type === 'bond') document.getElementById('numPctBond').value = document.getElementById('sliderBond').value;
+      if (type === 'cash') document.getElementById('numPctCash').value = document.getElementById('sliderCash').value;
+      calculate();
+    }
+
+    function syncAllocFromInput(type) {
+      if (type === 'stock') document.getElementById('sliderStock').value = document.getElementById('numPctStock').value || 0;
+      if (type === 'bond') document.getElementById('sliderBond').value = document.getElementById('numPctBond').value || 0;
+      if (type === 'cash') document.getElementById('sliderCash').value = document.getElementById('numPctCash').value || 0;
+      calculate();
+    }
+
+    function calculate() {
+      const currentAge = parseInt(document.getElementById('currentAge').value) || 35;
+      const retireAge = parseInt(document.getElementById('retireAge').value) || 65;
+      let currentAssets = parseFloat(document.getElementById('currentAssets').value) || 0;
+      const monthlyIncome = parseFloat(document.getElementById('monthlyIncome').value) || 0;
+      let baseMonthlyExpenses = parseFloat(document.getElementById('monthlyExpenses').value) || 0;
+      const inflation = (parseFloat(document.getElementById('inflationRate').value) || 0) / 100;
+
+      const pStock = (parseFloat(document.getElementById('numPctStock').value) || 0) / 100;
+      const pBond = (parseFloat(document.getElementById('numPctBond').value) || 0) / 100;
+      const pCash = (parseFloat(document.getElementById('numPctCash').value) || 0) / 100;
+
+      const yStock = (parseFloat(document.getElementById('yieldStock').value) || 0) / 100;
+      const yBond = (parseFloat(document.getElementById('yieldBond').value) || 0) / 100;
+      const yCash = (parseFloat(document.getElementById('yieldCash').value) || 0) / 100;
+
+      document.getElementById('amtStock').innerText = '$' + ((currentAssets * pStock) / 10000).toLocaleString(undefined, {maximumFractionDigits: 1}) + ' 萬';
+      document.getElementById('amtBond').innerText = '$' + ((currentAssets * pBond) / 10000).toLocaleString(undefined, {maximumFractionDigits: 1}) + ' 萬';
+      document.getElementById('amtCash').innerText = '$' + ((currentAssets * pCash) / 10000).toLocaleString(undefined, {maximumFractionDigits: 1}) + ' 萬';
+
+      const nominalROI = (pStock * yStock) + (pBond * yBond) + (pCash * yCash);
+      const realROI = nominalROI - inflation;
+
+      document.getElementById('portfolioRoiTag').innerText = `名目: ${(nominalROI * 100).toFixed(1)}% | 實質: ${(realROI * 100).toFixed(1)}%`;
+
+      const hasPension = isAdvancedActive && document.getElementById('togglePension').checked;
+      const pensionAge = parseInt(document.getElementById('pensionAge').value) || 65;
+      const pensionMonthly = parseFloat(document.getElementById('pensionMonthly').value) || 0;
+
+      const hasMedical = isAdvancedActive && document.getElementById('toggleMedical').checked;
+      const medAge = parseInt(document.getElementById('medAge').value) || 55;
+      const medCost = parseFloat(document.getElementById('medCost').value) || 0;
+
+      const hasCare = isAdvancedActive && document.getElementById('toggleCare').checked;
+      const careAge = parseInt(document.getElementById('careAge').value) || 75;
+      const careCost = parseFloat(document.getElementById('careCost').value) || 0;
+
+      const hasMC = isAdvancedActive && document.getElementById('toggleMonteCarlo').checked;
+      const mcAge = parseInt(document.getElementById('mcAge').value) || 50;
+      const mcDrop = (parseFloat(document.getElementById('mcDrop').value) || 35) / 100;
+
+      let futureMaxMonthlyExp = baseMonthlyExpenses;
+      if (hasCare) futureMaxMonthlyExp += careCost;
+      let todayAnnualExpenses = futureMaxMonthlyExp * 12;
+      if (hasPension) todayAnnualExpenses = Math.max(0, todayAnnualExpenses - (pensionMonthly * 12));
+
+      const todayFireTarget = todayAnnualExpenses * 25;
+      document.getElementById('kpi-fire-num').innerText = '$' + Math.round(todayFireTarget / 10000).toLocaleString() + ' 萬';
+
+      const labels = [];
+      const dataStock = [];
+      const dataBond = [];
+      const dataCash = [];
+
+      let fireAge = '尚未達成';
+      let reachedFIRE = false;
+      let bankruptAge = null;
+
+      let assets = currentAssets;
+      const projectionYears = 100 - currentAge;
+
+      for (let i = 0; i <= projectionYears; i++) {
+        const age = currentAge + i;
+        labels.push(`${age}歲`);
+
+        const displayAssets = Math.max(0, assets);
+        dataStock.push(displayAssets * pStock);
+        dataBond.push(displayAssets * pBond);
+        dataCash.push(displayAssets * pCash);
+
+        const inflatedAnnualExp = todayAnnualExpenses * Math.pow(1 + inflation, i);
+        const dynamicFireTarget = inflatedAnnualExp * 25;
+
+        if (!reachedFIRE && assets >= dynamicFireTarget) {
+          fireAge = `${age} 歲`;
+          reachedFIRE = true;
+        }
+
+        let currentMonthlyInc = (age < retireAge) ? monthlyIncome : 0;
+        if (hasPension && age >= pensionAge) {
+          currentMonthlyInc += pensionMonthly;
+        }
+
+        let currentMonthlyExp = baseMonthlyExpenses;
+        if (hasCare && age >= careAge) {
+          currentMonthlyExp += careCost;
+        }
+        const inflatedMonthlyExp = currentMonthlyExp * Math.pow(1 + inflation, i);
+
+        const annualSavings = (currentMonthlyInc - inflatedMonthlyExp) * 12;
+
+        if (hasMC && age === mcAge) {
+          const stockAsset = Math.max(0, assets) * pStock;
+          const lostVal = stockAsset * mcDrop;
+          assets -= lostVal;
+        }
+
+        const investmentReturn = (assets > 0) ? (assets * nominalROI) : 0;
+        assets = assets + investmentReturn + annualSavings;
+
+        if (hasMedical && age === medAge) {
+          assets -= medCost * Math.pow(1 + inflation, i);
+        }
+
+        if (assets < 0 && bankruptAge === null) {
+          bankruptAge = age;
+        }
+      }
+
+      document.getElementById('kpi-fire-age').innerText = fireAge;
+
+      const banner = document.getElementById('alertBanner');
+      if (bankruptAge !== null) {
+        banner.style.display = 'flex';
+        document.getElementById('alertText').innerText = `⚠️ 警告：預計於 ${retireAge} 歲退休停止工作薪資後，資產無法支撐支出，預估將在 ${bankruptAge} 歲歸零破產！`;
+      } else {
+        banner.style.display = 'none';
+      }
+
+      chart.data.labels = labels;
+      chart.data.datasets[0].data = dataStock;
+      chart.data.datasets[1].data = dataBond;
+      chart.data.datasets[2].data = dataCash;
+      chart.update();
+
+      const storyTitle = document.getElementById('storyTitle');
+      const storyBody = document.getElementById('storyBody');
+
+      if (bankruptAge !== null) {
+        storyTitle.innerHTML = "📖 人生描述：<span style='color: #f43f5e;'>🚨 月光危機與破產警示</span>";
+        storyBody.innerHTML = `
+          <div class="story-section warning">
+            <div class="story-sec-title warning">🚨 階段一：中年危機期（45 ~ 55 歲）</div>
+            <div class="story-sec-body">
+              當同齡朋友在討論資產翻倍、規劃提前退休時，你依然為了每個月的信用卡帳單與房租發愁。此時體力與職場競爭力開始走下坡，萬一面臨公司裁員，由於沒有被動收入與緊急預備金，生活將在三個月內立刻斷糧陷入危機。
+            </div>
+          </div>
+
+          <div class="story-section danger">
+            <div class="story-sec-title danger">💣 階段二：退休斷糧期（預估 ${bankruptAge} 歲資產歸零）</div>
+            <div class="story-sec-body">
+              到了 ${retireAge} 歲職場強制退休，工作薪資瞬間歸零。資產預估將在 <strong>${bankruptAge} 歲</strong> 完全耗盡！沒有股票與債券帶來的被動現金流，光是支付通膨後的昂貴房租與日常開銷，就會將過往僅存的一點積蓄蠶食鯨吞。
+            </div>
+          </div>
+
+          <div class="story-section danger">
+            <div class="story-sec-title danger">🏚️ 階段三：晚年尊嚴危機（70 歲以上）</div>
+            <div class="story-sec-body">
+              為了維持基本三餐，70 歲高齡依然不得不頂著風吹雨打，上街搶發傳單、接人形立牌廣告等高強度體力工作。房東因無資產證明拒絕續租，晚年面臨隨時被搬遷退租與缺乏醫療護理的極大困境，失去應有的尊嚴。
+            </div>
+          </div>
+        `;
+      } else {
+        storyTitle.innerHTML = "📖 人生描述：<span style='color: #34d399;'>✨ 平安順遂，順老終身</span>";
+        storyBody.innerHTML = `
+          <div class="story-section success">
+            <div class="story-sec-title success">🌟 階段一：黃金累積期（35 ~ ${retireAge} 歲）</div>
+            <div class="story-sec-body">
+              藉由定額儲蓄與合理的股票/債券配置，你的資產正透過時間複利滾雪球增長。預估可在 <strong>${fireAge}</strong> 順利跨過抗通膨 FIRE 門檻，比絕大多數同齡人更早獲得工作選擇權與人生自由。
+            </div>
+          </div>
+
+          <div class="story-section success">
+            <div class="story-sec-title success">🏖️ 階段二：尊嚴退休期（${retireAge} 歲起）</div>
+            <div class="story-sec-body">
+              到了 ${retireAge} 歲安心退休時，被動投資產生的股息與債息足以完全覆蓋生活總開銷，無須擔心停止工作薪資帶來的經濟焦慮。
+            </div>
+          </div>
+
+          <div class="story-section success">
+            <div class="story-sec-title success">👵 階段三：百歲終身無憂（75 ~ 100 歲）</div>
+            <div class="story-sec-body">
+              即使推演至 100 歲高齡，並算入突發醫療與長照費用，整體資產依然十分充沛。實現真正的「平安無事、順老終身」，過著有品質、有尊嚴的晚年人生！
+            </div>
+          </div>
+        `;
+      }
+    }
+
+    window.onload = () => {
+      initChart();
+      calcWaste();
+      calculate();
+    };
+  </script>
+</body>
+</html>

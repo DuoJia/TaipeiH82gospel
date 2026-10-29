@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#2aa7d8">
+<title>塗鴉動物園 🏞️</title>
+<meta name="description" content="把大家畫的動物放進同一個畫面，切換海底世界、草原、森林、冰原四種背景。照片不會上傳。">
+<link rel="stylesheet" href="zoo.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏞️</text></svg>">
+</head>
+<body>
+
+<header class="top">
+  <h1>塗鴉動物園 <span class="bob">🏞️</span></h1>
+  <p class="sub">大家畫的動物，一起住在這裡</p>
+</header>
+
+<main>
+  <div id="appBanner" class="banner hidden">
+    📱 如果你按了「加入動物」沒反應：點右上角 <b>⋯</b> → <b>在瀏覽器開啟</b>（Telegram／LINE 內建瀏覽器會擋上傳）
+  </div>
+
+  <div class="stage-card">
+    <div id="stageWrap" class="stage-wrap">
+      <canvas id="stage"></canvas>
+      <div id="empty" class="empty">
+        <div class="empty-emoji">🐾</div>
+        <div>按下面的「加入動物」<br>拍照或選一張畫</div>
+      </div>
+      <div id="busy" class="busy hidden"><div class="spinner"></div><span id="busyText">處理中…</span></div>
+      <div id="count" class="count">0 隻</div>
+      <div id="toast" class="toast"></div>
+    </div>
+  </div>
+
+  <div class="bgs" id="bgs">
+    <button class="bg-chip active" data-bg="sea">🌊 海底世界</button>
+    <button class="bg-chip" data-bg="grass">🌿 草原</button>
+    <button class="bg-chip" data-bg="forest">🌲 森林</button>
+    <button class="bg-chip" data-bg="ice">❄️ 冰原</button>
+  </div>
+
+  <div class="switches">
+    <label class="sw"><input id="tgWalk" type="checkbox" checked> 🚶 走來走去</label>
+    <label class="sw"><input id="tgFx" type="checkbox" checked> ✨ 角色特效</label>
+  </div>
+
+  <div class="row">
+    <label class="btn btn-main" for="fileCam" id="labCam"><span class="ico">📷</span> 加入動物</label>
+    <input id="fileCam" type="file" accept="image/*" capture="environment" hidden>
+    <label class="btn btn-2nd" for="fileAlbum" id="labAlbum"><span class="ico">🖼️</span> 從相簿加</label>
+    <input id="fileAlbum" type="file" accept="image/*" multiple hidden>
+  </div>
+
+  <div class="row small">
+    <button id="btnPause" class="btn btn-2nd">⏸️ 暫停</button>
+    <button id="btnVideo" class="btn btn-2nd">📹 錄影 6 秒</button>
+    <button id="btnShot" class="btn btn-2nd">🖼️ 存圖</button>
+    <button id="btnFull" class="btn btn-2nd">🖥️ 全螢幕</button>
+  </div>
+
+  <div id="tools" class="tools hidden">
+    <div class="tools-head">
+      <span id="toolName" class="tool-name">動物</span>
+      <span class="tools-tip">點動物下方的按鈕來調整</span>
+    </div>
+    <div class="tools-row">
+      <button data-act="anim">🔁 換動作</button>
+      <button data-act="big">➕ 放大</button>
+      <button data-act="small">➖ 縮小</button>
+      <button data-act="flip">↔️ 翻轉</button>
+      <button data-act="del" class="danger">🗑️ 刪除</button>
+    </div>
+    <div class="tools-row fx-row">
+      <span class="fx-label">牠會噴什麼？</span>
+      <button data-fx="fire">🔥 火</button>
+      <button data-fx="bolt">⚡ 電</button>
+      <button data-fx="ice">❄️ 冰</button>
+      <button data-fx="wind">🌬️ 風</button>
+      <button data-fx="none">🚫 不用</button>
+    </div>
+  </div>
+
+  <p class="hint" id="hint">
+    手指拖動物可以換位置；點一下動物，可以換動作、大小、翻轉、特效、刪除。<br>
+    照片只在你的手機裡處理，<b>不會上傳到任何伺服器</b>。
+  </p>
+
+  <a class="back" href="../">← 回「塗鴉動物復活機」</a>
+</main>
+
+<footer class="foot">台北市召會 82 會所 · 兒童排小工具 🐣</footer>
+
+<script src="../core.js"></script>
+<script src="../motion.js"></script>
+<script src="zoo.js"></script>
+</body>
+</html>
