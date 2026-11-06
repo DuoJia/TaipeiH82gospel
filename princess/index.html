@@ -1,0 +1,171 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<meta name="theme-color" content="#ffd6ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<title>魔法公主學園 · Princess Magic Academy</title>
+<link rel="stylesheet" href="css/app.css">
+</head>
+<body>
+<div class="sky"><i class="star s1"></i><i class="star s2"></i><i class="star s3"></i><i class="star s4"></i><i class="star s5"></i></div>
+
+<main id="app">
+
+  <!-- ① 選夥伴 -->
+  <section class="screen on" id="scr-boot">
+    <h1 class="logo">🦄 魔法公主學園</h1>
+    <p class="sub">Choose your friend!</p>
+    <div class="picks" id="companionPicks"></div>
+    <button class="ghost" id="btnContinue" hidden>出發 ▶</button>
+  </section>
+
+  <!-- ② 公主房間（主畫面） -->
+  <section class="screen" id="scr-room">
+    <header class="hud">
+      <div class="stones" id="stoneBox"><span class="gem">💎</span><b id="stoneCount">0</b></div>
+      <div class="hud-right">
+        <button class="hud-btn" id="btnVoice" aria-label="聲音">🔊</button>
+        <button class="hud-btn" id="btnParent" aria-label="家長">⚙️</button>
+      </div>
+    </header>
+
+    <div class="stage" id="stage">
+      <svg class="stagebg" viewBox="0 0 400 300" preserveAspectRatio="xMidYMax slice" aria-hidden="true">
+        <g fill="#ffffff" opacity=".72">
+          <ellipse cx="86" cy="60" rx="30" ry="16"/><ellipse cx="112" cy="54" rx="20" ry="12"/>
+          <ellipse cx="300" cy="86" rx="26" ry="14"/><ellipse cx="276" cy="80" rx="16" ry="10"/>
+        </g>
+        <circle cx="342" cy="48" r="24" fill="#fff" opacity=".8"/>
+        <circle cx="332" cy="42" r="24" fill="#ffe9f6" opacity=".95"/>
+        <g fill="#d9b3ff" opacity=".95">
+          <rect x="34" y="120" width="46" height="180" rx="6"/>
+          <path d="M30 122 L57 84 L84 122 Z"/>
+          <path d="M52 70 l5 12 l5 -12 z"/>
+          <rect x="88" y="158" width="224" height="142"/>
+          <rect x="320" y="132" width="46" height="168" rx="6"/>
+          <path d="M316 134 L343 96 L370 134 Z"/>
+          <path d="M338 82 l5 12 l5 -12 z"/>
+        </g>
+        <rect x="20" y="238" width="360" height="62" rx="10" fill="#dcbcff" opacity=".85"/>
+        <g fill="#fff8fc" stroke="#e3c8ff" stroke-width="3">
+          <rect x="142" y="178" width="30" height="46" rx="15"/>
+          <rect x="228" y="178" width="30" height="46" rx="15"/>
+          <rect x="184" y="204" width="32" height="32" rx="16"/>
+        </g>
+        <g fill="#fff" opacity=".7">
+          <circle cx="70" cy="40" r="2.4"/><circle cx="120" cy="24" r="1.8"/>
+          <circle cx="210" cy="36" r="2.2"/><circle cx="264" cy="18" r="1.6"/>
+        </g>
+      </svg>
+      <div class="decor" id="decorLayer"></div>
+      <div class="princess" id="princess"></div>
+      <div class="bubble" id="bubble" hidden><span id="bubbleText"></span></div>
+    </div>
+
+    <div class="big-btns">
+      <button class="big b1" id="btnPlay"><span class="em">🗺️</span><span class="lb">魔法探險</span></button>
+      <button class="big b2" id="btnDex"><span class="em">🎴</span><span class="lb">寶卡圖鑑</span></button>
+      <button class="big b3" id="btnShop"><span class="em">🎁</span><span class="lb">魔法商店</span></button>
+      <button class="big b4" id="btnBopo"><span class="em">ㄅ</span><span class="lb">注音 ㄅㄆㄇ</span></button>
+    </div>
+  </section>
+
+  <!-- ②-b 注音魔法屋 -->
+  <section class="screen" id="scr-bopo">
+    <header class="top">
+      <button class="hud-btn" data-back="room">⬅️</button>
+      <h2 class="title">注音魔法屋 ㄅㄆㄇ</h2>
+      <div class="stones small"><span class="gem">💎</span><b class="stoneCount">0</b></div>
+    </header>
+    <div class="bopo-tabs" id="bopoTabs">
+      <button data-tab="chart" class="on">🔤 圖鑑</button>
+      <button data-tab="listen">👂 聽一聽</button>
+      <button data-tab="blend">🧩 拼一拼</button>
+    </div>
+    <div class="bopo-body" id="bopoBody"></div>
+  </section>
+
+  <!-- ③ 地圖 -->
+  <section class="screen" id="scr-map">
+    <header class="top">
+      <button class="hud-btn" data-back="room">⬅️</button>
+      <h2 class="title">魔法探險地圖</h2>
+      <div class="stones small"><span class="gem">💎</span><b class="stoneCount">0</b></div>
+    </header>
+    <div class="units" id="units"></div>
+  </section>
+
+  <!-- ④ 上課 -->
+  <section class="screen lesson" id="scr-lesson">
+    <header class="top lesson-top">
+      <button class="hud-btn" id="btnQuit">✖️</button>
+      <div class="dots" id="dots"></div>
+      <button class="hud-btn" id="btnReplay">🔊</button>
+    </header>
+    <div class="lesson-body" id="lessonBody"></div>
+  </section>
+
+  <!-- ⑤ 圖鑑 -->
+  <section class="screen" id="scr-dex">
+    <header class="top">
+      <button class="hud-btn" data-back="room">⬅️</button>
+      <h2 class="title">寶卡圖鑑</h2>
+      <div class="dex-count"><b id="dexOwned">0</b>/<span id="dexTotal">12</span></div>
+    </header>
+    <div class="dex-grid" id="dexGrid"></div>
+  </section>
+
+  <!-- ⑥ 商店 -->
+  <section class="screen" id="scr-shop">
+    <header class="top">
+      <button class="hud-btn" data-back="room">⬅️</button>
+      <h2 class="title">魔法商店</h2>
+      <div class="stones small"><span class="gem">💎</span><b class="stoneCount">0</b></div>
+    </header>
+    <div class="shop-grid" id="shopGrid"></div>
+  </section>
+
+  <!-- ⑦ 家長後台 -->
+  <section class="screen" id="scr-parent">
+    <header class="top">
+      <button class="hud-btn" data-back="room">⬅️</button>
+      <h2 class="title">家長管理</h2>
+      <div style="width:56px"></div>
+    </header>
+    <div class="parent-body" id="parentBody"></div>
+  </section>
+
+</main>
+
+<!-- 卡片彈窗 -->
+<div class="modal" id="modal" hidden>
+  <div class="modal-inner" id="modalInner"></div>
+  <button class="modal-close" id="modalClose">✖️</button>
+</div>
+
+<!-- 時間到鎖屏 -->
+<div class="lockscreen" id="lock" hidden>
+  <div class="lock-card">
+    <div class="lock-emoji">🌙</div>
+    <h2>今天的魔法用完囉！</h2>
+    <p>明天再來一起玩 💫</p>
+    <button class="ghost" id="lockParent">家長解鎖</button>
+  </div>
+</div>
+
+<!-- 星塵特效層 -->
+<div class="fx" id="fx"></div>
+
+<script src="js/data.js"></script>
+<script src="js/logic.js"></script>
+<script src="js/audio.js"></script>
+<script src="js/store.js"></script>
+<script src="js/sprites.js"></script>
+<script src="js/games.js"></script>
+<script src="js/bopomofo.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>

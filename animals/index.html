@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#7ad0ff">
+<title>塗鴉動物復活機 🐾</title>
+<meta name="description" content="把小朋友畫的動物上色圖拍下來，立刻變成會動的動物。照片不會上傳到任何伺服器。">
+<link rel="stylesheet" href="style.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🐾</text></svg>">
+</head>
+<body>
+
+<header class="top">
+  <h1>塗鴉動物復活機 <span class="paw">🐾</span></h1>
+  <p class="sub">畫好的動物，拍一下就會動！</p>
+</header>
+
+<main>
+  <!-- ① 上傳 -->
+  <section id="pick" class="card">
+    <div class="steps">
+      <div class="step"><b>1</b> 畫圖＋塗色</div>
+      <div class="step"><b>2</b> 拍照上傳</div>
+      <div class="step"><b>3</b> 看牠動起來</div>
+    </div>
+
+    <label class="btn btn-main" for="fileCamera">
+      <span class="ico">📷</span> 拍照上傳
+    </label>
+    <input id="fileCamera" type="file" accept="image/*" capture="environment" hidden>
+
+    <label class="btn btn-2nd" for="fileAlbum">
+      <span class="ico">🖼️</span> 從相簿選照片
+    </label>
+    <input id="fileAlbum" type="file" accept="image/*" hidden>
+
+    <button id="btnDemo" class="btn btn-demo" type="button">
+      <span class="ico">✨</span> 先看示範
+    </button>
+
+    <a class="btn btn-demo" href="zoo/" style="text-decoration:none">
+      <span class="ico">🏞️</span> 動物園（一次放很多隻）
+    </a>
+
+    <p class="tip">
+      💡 小提醒：把紙放平、光線平均、鏡頭靠近一點（只拍到畫就好），去背會最乾淨。<br>
+      照片只在你的手機裡處理，<b>不會上傳到任何伺服器</b>。
+    </p>
+  </section>
+
+  <!-- ② 舞台 -->
+  <section id="play" class="card hidden">
+    <div id="stageWrap" class="stage-wrap">
+      <canvas id="stage"></canvas>
+      <div id="busy" class="busy hidden"><div class="spinner"></div><span id="busyText">處理中…</span></div>
+    </div>
+
+    <div class="chips" id="animChips">
+      <button class="chip active" data-anim="breathe">🫧 呼吸</button>
+      <button class="chip" data-anim="walk">🐾 走路</button>
+      <button class="chip" data-anim="jump">🎈 跳跳</button>
+      <button class="chip" data-anim="dance">💃 跳舞</button>
+      <button class="chip" data-anim="wave">🌊 波浪</button>
+    </div>
+
+    <div class="sliders">
+      <label class="slider">
+        <span>動作大小</span>
+        <input id="amp" type="range" min="0" max="2" step="0.05" value="1">
+      </label>
+      <label class="slider">
+        <span>速度快慢</span>
+        <input id="speed" type="range" min="0.3" max="2.2" step="0.05" value="1">
+      </label>
+    </div>
+
+    <div class="toggles">
+      <label class="tg"><input id="tgScene" type="checkbox" checked> 加背景</label>
+      <label class="tg"><input id="tgBg" type="checkbox" checked> 去背</label>
+      <label class="tg"><input id="tgLight" type="checkbox" checked> 修正燈光</label>
+    </div>
+
+    <div class="actions">
+      <button id="btnVideo" class="btn btn-main">📹 錄成影片</button>
+      <button id="btnPng" class="btn btn-2nd">🖼️ 存透明圖</button>
+      <button id="btnFull" class="btn btn-2nd">🖥️ 全螢幕</button>
+      <button id="btnAgain" class="btn btn-ghost">🔄 換一張</button>
+    </div>
+
+    <p id="hint" class="hint"></p>
+  </section>
+</main>
+
+<footer class="foot">台北市召會 82 會所 · 兒童排小工具 🐣</footer>
+
+<div id="toast" class="toast"></div>
+
+<script src="core.js"></script>
+<script src="motion.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
